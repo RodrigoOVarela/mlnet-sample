@@ -17,6 +17,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddSingleton<SentimentModel>();
+builder.Services.AddSingleton<ReviewService>();
+
 
 var app = builder.Build();
 
