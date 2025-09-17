@@ -1,23 +1,37 @@
 using MLNETSample.ML;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Registrar o modelo como Singleton
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "ML.NET Sentiment Analysis API",
+        Version = "v1",
+        Description = "An API for sentiment analysis using ML.NET"
+    });
+});
+
 builder.Services.AddSingleton<SentimentModel>();
 
 var app = builder.Build();
 
-app.MapPost("/analyze-review", (ReviewRequest request, SentimentModel model) =>
+if (app.Environment.IsDevelopment())
 {
-    var prediction = model.Predict(request.Text);
-
-    return Results.Ok(new
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
     {
-        Review = request.Text,
-        Sentiment = prediction.PredictedLabel ? "Positive" : "Negative",
-        Confidence = prediction.Probability
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ML.NET Sentiment Analysis API v1");
+        c.RoutePrefix = string.Empty;
     });
-});
+}
 
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
