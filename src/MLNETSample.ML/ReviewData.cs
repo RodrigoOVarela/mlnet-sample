@@ -1,5 +1,11 @@
 ﻿namespace MLNETSample.ML;
 
+public enum SentimentType
+{
+    Positive,
+    Negative
+}
+
 public class ReviewData
 {
     public string Text { get; set; } = string.Empty;

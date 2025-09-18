@@ -17,10 +17,11 @@ namespace MLNETSample.API.Controllers
         /// <summary>
         /// List all reviews stored in the dataset.
         /// </summary>
+        /// <param name="sentiment">Filter reviews by sentiment (Positive, Negative). If not provided, returns all reviews.</param>
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromQuery] SentimentType? sentiment = null)
         {
-            var reviews = _reviewService.GetReviews();
+            var reviews = _reviewService.GetReviews(sentiment);
             return Ok(reviews);
         }
     }
